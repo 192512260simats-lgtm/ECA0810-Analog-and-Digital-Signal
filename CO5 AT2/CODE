@@ -1,0 +1,81 @@
+clc;
+clear;
+close all;
+
+% GSM TDMA Parameters
+numSlots = 8;
+slotDuration = 577e-6;       % 577 microseconds
+frameDuration = 4.615e-3;    % 4.615 milliseconds
+
+% Number of Users
+numUsers = 4;
+
+% Time-slot allocation
+allocation = [1 2 3 4 1 2 3 4];
+
+% Display Time-Slot Allocation
+disp('GSM Time-Slot Allocation:');
+
+for slot = 1:numSlots
+    fprintf('Time Slot %d --> User %d\n', ...
+        slot-1, allocation(slot));
+end
+
+% Create Figure
+figure;
+hold on;
+
+% Plot each time slot
+for slot = 1:numSlots
+
+    x1 = (slot-1) * slotDuration;
+
+    user = allocation(slot);
+
+    % Draw time slot
+    rectangle('Position', ...
+        [x1 user-0.4 slotDuration 0.8], ...
+        'FaceColor', 'cyan', ...
+        'EdgeColor', 'black');
+
+    % Display User Number
+    text(x1 + slotDuration/2, user, ...
+        sprintf('U%d', user), ...
+        'HorizontalAlignment', 'center', ...
+        'VerticalAlignment', 'middle', ...
+        'FontWeight', 'bold');
+
+end
+
+% Graph Labels
+xlabel('Time (seconds)');
+ylabel('User');
+title('GSM TDMA Frame Structure');
+
+% Axis Limits
+xlim([0 frameDuration]);
+ylim([0.5 numUsers + 0.5]);
+
+% Grid
+grid on;
+
+% Display GSM Frame Information
+fprintf('\nGSM Frame Duration = %.3f ms\n', ...
+    frameDuration * 1000);
+
+fprintf('Number of Time Slots = %d\n', ...
+    numSlots);
+
+fprintf('Time Slot Duration = %.3f microseconds\n', ...
+    slotDuration * 1e6);
+
+% Display percentage allocation
+fprintf('\nTime-Slot Allocation:\n');
+
+for user = 1:numUsers
+    slotsUsed = sum(allocation == user);
+    percentage = (slotsUsed / numSlots) * 100;
+
+    fprintf('User %d: %d slots (%.1f%%)\n', ...
+        user, slotsUsed, percentage);
+end
